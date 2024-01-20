@@ -102,6 +102,11 @@ wss.on('connection', async (ws) => {
             for(let player of players){
                 player.send(JSON.stringify({type: 'failure', value: hangman[failures]}));
             }
+            if(failures == 6){
+                for(let player of players){
+                    player.send(JSON.stringify({type: 'defeat', value: 'You lose!'}));
+                }
+            }
         }
         else{
             hiddenWord = revealLetters(word, hiddenWord, message.toString('utf8'));
@@ -109,6 +114,11 @@ wss.on('connection', async (ws) => {
             console.log(hiddenWord);
             for(let player of players){
                 player.send(JSON.stringify({type: 'success', value: hiddenWord}));
+            }
+            if(hiddenWord == word){
+                for(let player of players){
+                    player.send(JSON.stringify({type: 'victory', value: 'You win!'}));
+                }
             }
         }
     })
